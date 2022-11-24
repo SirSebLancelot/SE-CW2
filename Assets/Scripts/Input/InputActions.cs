@@ -44,6 +44,24 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Value"",
+                    ""id"": ""12077d10-69bf-4e2d-bfdc-50ca51063612"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Value"",
+                    ""id"": ""046bf842-9663-47f0-a961-91ce0c745321"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -134,6 +152,50 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""16f0f770-7529-4a80-b7c3-a3dbd27e9aff"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb4bba0a-5720-4f0b-88d0-78070bcef22a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1455266b-94e4-40eb-b088-10bd9e16d5f8"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b767dabb-eea7-4fff-ba88-0cd2eb02e250"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -144,6 +206,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_HumanoidLand = asset.FindActionMap("HumanoidLand", throwIfNotFound: true);
         m_HumanoidLand_Move = m_HumanoidLand.FindAction("Move", throwIfNotFound: true);
         m_HumanoidLand_Look = m_HumanoidLand.FindAction("Look", throwIfNotFound: true);
+        m_HumanoidLand_Jump = m_HumanoidLand.FindAction("Jump", throwIfNotFound: true);
+        m_HumanoidLand_Run = m_HumanoidLand.FindAction("Run", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -205,12 +269,16 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private IHumanoidLandActions m_HumanoidLandActionsCallbackInterface;
     private readonly InputAction m_HumanoidLand_Move;
     private readonly InputAction m_HumanoidLand_Look;
+    private readonly InputAction m_HumanoidLand_Jump;
+    private readonly InputAction m_HumanoidLand_Run;
     public struct HumanoidLandActions
     {
         private @InputActions m_Wrapper;
         public HumanoidLandActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_HumanoidLand_Move;
         public InputAction @Look => m_Wrapper.m_HumanoidLand_Look;
+        public InputAction @Jump => m_Wrapper.m_HumanoidLand_Jump;
+        public InputAction @Run => m_Wrapper.m_HumanoidLand_Run;
         public InputActionMap Get() { return m_Wrapper.m_HumanoidLand; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -226,6 +294,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Look.started -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnLook;
+                @Jump.started -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnJump;
+                @Run.started -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnRun;
+                @Run.performed -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnRun;
+                @Run.canceled -= m_Wrapper.m_HumanoidLandActionsCallbackInterface.OnRun;
             }
             m_Wrapper.m_HumanoidLandActionsCallbackInterface = instance;
             if (instance != null)
@@ -236,6 +310,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
             }
         }
     }
@@ -244,5 +324,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
     }
 }
